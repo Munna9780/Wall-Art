@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocalStorage Test - Luxury Wall Arts</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            font-family: 'Playfair Display', serif;
+            color: #333;
+        }
+        .actions {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        button {
+            background-color: #b8860b;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #a67c0b;
+        }
+        button.danger {
+            background-color: #c62828;
+        }
+        button.danger:hover {
+            background-color: #b71c1c;
+        }
+        button.success {
+            background-color: #2e7d32;
+        }
+        button.success:hover {
+            background-color: #1b5e20;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .product-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .product-card h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .product-image {
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: cover;
+            float: right;
+            margin-left: 15px;
+            border-radius: 3px;
+        }
+        .sizes-list {
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        .sizes-list div {
+            margin-bottom: 5px;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .status.error {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+        .status.success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+        .links {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .links a {
+            display: inline-block;
+            margin-right: 15px;
+            color: #b8860b;
+            text-decoration: none;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+        .debug-info {
+            background-color: #e8f1fb;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #cad8e8;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        table th {
+            background-color: #f5f5f5;
+        }
+        .action-description {
+            margin-top: 5px;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>LocalStorage Products Test</h1>
+    <p>This tool diagnoses issues with products not appearing on the home page by showing the state of product data in localStorage.</p>
+    
+    <div class="debug-info">
+        <h2>System Information</h2>
+        <table>
+            <tr>
+                <th>Browser</th>
+                <td id="browser-info">Loading...</td>
+            </tr>
+            <tr>
+                <th>LocalStorage Available</th>
+                <td id="storage-available">Checking...</td>
+            </tr>
+            <tr>
+                <th>LocalStorage Size</th>
+                <td id="storage-size">Calculating...</td>
+            </tr>
+            <tr>
+                <th>Products Found</th>
+                <td id="products-count">Checking...</td>
+            </tr>
+            <tr>
+                <th>Last Updated</th>
+                <td id="last-updated">Unknown</td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="actions">
+        <button id="refresh-btn">Refresh Data</button>
+        <button id="restore-defaults" class="success">Restore Default Products</button>
+        <button id="test-home-page">Test Home Page Products</button>
+        <button id="copy-products">Copy Products to Clipboard</button>
+        <button id="clear-storage" class="danger">Clear LocalStorage</button>
+    </div>
+    <div class="action-description">
+        <strong>Recommended fix:</strong> If products aren't showing on the home page, click "Restore Default Products" then refresh your home page.
+    </div>
+    
+    <div id="status"></div>
+    
+    <h2>Current Products in LocalStorage</h2>
+    <div id="products-container"></div>
+    
+    <h2>Raw LocalStorage Data</h2>
+    <pre id="raw-data"></pre>
+    
+    <div class="links">
+        <a href="index.html">Go to Home Page</a>
+        <a href="admin.html">Go to Admin Page</a>
+        <a href="PRODUCT_SYNC_GUIDE.md" target="_blank">View Product Sync Guide</a>
+    </div>
+    
+    <script>
+        // Default products that should be used if localStorage is empty
+        const defaultWallArts = [
+            {
+                id: 1,
+                title: "Elegant Abstract Canvas",
+                description: "Modern abstract wall art with gold foil accents, perfect for luxury living spaces",
+                image: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                sizes: [
+                    { size: "5x7 inches", price: "$24.99", amazonLink: "YOUR_AMAZON_AFFILIATE_LINK_1_5x7" },
+                    { size: "8x10 inches", price: "$39.99", amazonLink: "YOUR_AMAZON_AFFILIATE_LINK_1_8x10" },
+                    { size: "16x20 inches", price: "$99.99", amazonLink: "YOUR_AMAZON_AFFILIATE_LINK_1_16x20" }
+                ]
+            },
+            {
+                id: 2,
+                title: "Minimalist Gold Leaf Print",
+                description: "Clean, sophisticated design with real gold leaf embellishments",
+                image: "https://images.unsplash.com/photo-1577083552431-6e5c019a0f1e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                sizes: [
+                    { size: "4x6 inches", price: "$19.99", amazonLink: "YOUR_AMAZON_AFFILIATE_LINK_2_4x6" },
+                    { size: "5x5 inches", price: "$24.99", amazonLink: "YOUR_AMAZON_AFFILIATE_LINK_2_5x5" },
+                    { size: "8x10 inches", price: "$49.99", amazonLink: "YOUR_AMAZON_AFFILIATE_LINK_2_8x10" }
+                ]
+            },
+            {
+                id: 3,
+                title: "Premium Landscape Art",
+                description: "Breathtaking landscape with metallic finish, handcrafted frame available",
+                image: "https://images.unsplash.com/photo-1548430094-790652c4dac6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                sizes: [
+                    { size: "16x20 inches", price: "$89.99", amazonLink: "YOUR_AMAZON_AFFILIATE_LINK_3_16x20" },
+                    { size: "24x36 inches", price: "$179.99", amazonLink: "YOUR_AMAZON_AFFILIATE_LINK_3_24x36" }
+                ]
+            }
+        ];
+        
+        // Update system information
+        function updateSystemInfo() {
+            // Browser detection
+            const browserInfo = document.getElementById('browser-info');
+            const ua = navigator.userAgent;
+            let browserName;
+            
+            if (ua.indexOf("Chrome") > -1) {
+                browserName = "Google Chrome";
+            } else if (ua.indexOf("Safari") > -1) {
+                browserName = "Apple Safari";
+            } else if (ua.indexOf("Firefox") > -1) {
+                browserName = "Mozilla Firefox";
+            } else if (ua.indexOf("MSIE") > -1 || ua.indexOf("Trident") > -1) {
+                browserName = "Internet Explorer";
+            } else if (ua.indexOf("Edge") > -1) {
+                browserName = "Microsoft Edge";
+            } else {
+                browserName = "Unknown";
+            }
+            
+            browserInfo.textContent = `${browserName} (${navigator.userAgent})`;
+            
+            // Check localStorage availability
+            const storageAvailable = document.getElementById('storage-available');
+            try {
+                localStorage.setItem('test', 'test');
+                localStorage.removeItem('test');
+                storageAvailable.textContent = 'Yes';
+                storageAvailable.style.color = '#2e7d32';
+            } catch (e) {
+                storageAvailable.textContent = 'No - ' + e.message;
+                storageAvailable.style.color = '#c62828';
+            }
+            
+            // Calculate localStorage size
+            const storageSize = document.getElementById('storage-size');
+            let size = 0;
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                size += key.length + value.length;
+            }
+            
+            const sizeInKB = (size / 1024).toFixed(2);
+            storageSize.textContent = `${sizeInKB} KB used (limit ~5MB)`;
+            
+            // Products count
+            const productsCount = document.getElementById('products-count');
+            try {
+                const storedData = localStorage.getItem('wallArts');
+                if (storedData) {
+                    const products = JSON.parse(storedData);
+                    if (Array.isArray(products)) {
+                        productsCount.textContent = `${products.length} products`;
+                        if (products.length === 0) {
+                            productsCount.style.color = '#c62828';
+                        } else {
+                            productsCount.style.color = '#2e7d32';
+                        }
+                    } else {
+                        productsCount.textContent = 'Invalid data (not an array)';
+                        productsCount.style.color = '#c62828';
+                    }
+                } else {
+                    productsCount.textContent = 'No products found';
+                    productsCount.style.color = '#c62828';
+                }
+            } catch (e) {
+                productsCount.textContent = `Error: ${e.message}`;
+                productsCount.style.color = '#c62828';
+            }
+            
+            // Last updated
+            const lastUpdated = document.getElementById('last-updated');
+            lastUpdated.textContent = new Date().toLocaleString();
+        }
+        
+        // Update status message
+        function showStatus(message, isError = false) {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = isError ? 'status error' : 'status success';
+        }
+        
+        // Display products from localStorage
+        function displayProducts() {
+            const container = document.getElementById('products-container');
+            const rawData = document.getElementById('raw-data');
+            
+            // Update system info
+            updateSystemInfo();
+            
+            // Get raw data
+            const storedData = localStorage.getItem('wallArts');
+            rawData.textContent = storedData || 'No data found in localStorage';
+            
+            // Clear container
+            container.innerHTML = '';
+            
+            if (!storedData) {
+                showStatus('No product data found in localStorage. The home page will show default products.', true);
+                return;
+            }
+            
+            try {
+                const products = JSON.parse(storedData);
+                
+                if (!Array.isArray(products) || products.length === 0) {
+                    showStatus('No valid products found in localStorage. The array is empty or not an array.', true);
+                    return;
+                }
+                
+                showStatus(`Found ${products.length} products in localStorage.`);
+                
+                products.forEach(product => {
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    
+                    const sizesList = product.sizes.map(size => 
+                        `<div>${size.size} - ${size.price}</div>`
+                    ).join('');
+                    
+                    card.innerHTML = `
+                        <img src="${product.image}" alt="${product.title}" class="product-image">
+                        <h3>${product.title} (ID: ${product.id})</h3>
+                        <p>${product.description}</p>
+                        <div class="sizes-list">
+                            <strong>Sizes:</strong>
+                            ${sizesList}
+                        </div>
+                    `;
+                    
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                showStatus(`Error parsing localStorage data: ${error.message}`, true);
+            }
+        }
+        
+        // Test if products appear on home page
+        function testHomePage() {
+            const w = window.open('index.html', '_blank');
+            setTimeout(() => {
+                if (w) {
+                    w.postMessage('test-product-display', '*');
+                }
+            }, 1000);
+        }
+        
+        // Copy products to clipboard
+        function copyProductsToClipboard() {
+            const storedData = localStorage.getItem('wallArts');
+            if (storedData) {
+                navigator.clipboard.writeText(storedData)
+                    .then(() => {
+                        showStatus('Products copied to clipboard successfully.');
+                    })
+                    .catch(err => {
+                        showStatus(`Failed to copy: ${err}`, true);
+                    });
+            } else {
+                showStatus('No product data to copy.', true);
+            }
+        }
+        
+        // Button event handlers
+        document.getElementById('refresh-btn').addEventListener('click', () => {
+            displayProducts();
+        });
+        
+        document.getElementById('restore-defaults').addEventListener('click', () => {
+            if (confirm('This will restore default products to localStorage. Continue?')) {
+                localStorage.setItem('wallArts', JSON.stringify(defaultWallArts));
+                localStorage.setItem('lastRestored', new Date().toISOString());
+                displayProducts();
+                showStatus('Default products have been restored.');
+            }
+        });
+        
+        document.getElementById('test-home-page').addEventListener('click', () => {
+            testHomePage();
+            showStatus('Testing home page in a new tab...');
+        });
+        
+        document.getElementById('copy-products').addEventListener('click', () => {
+            copyProductsToClipboard();
+        });
+        
+        document.getElementById('clear-storage').addEventListener('click', () => {
+            if (confirm('This will remove all products from localStorage. Continue?')) {
+                localStorage.removeItem('wallArts');
+                displayProducts();
+                showStatus('LocalStorage has been cleared.', true);
+            }
+        });
+        
+        // Handle messages from home page
+        window.addEventListener('message', (event) => {
+            if (event.data && event.data.status === 'product-check') {
+                if (event.data.count > 0) {
+                    showStatus(`Home page loaded ${event.data.count} products successfully.`);
+                } else {
+                    showStatus(`Home page found NO products! Problem detected.`, true);
+                }
+            }
+        }, false);
+        
+        // Initial display
+        displayProducts();
+    </script>
+</body>
+</html> 

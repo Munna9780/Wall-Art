@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found | Luxury Wall Arts Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #b8860b; /* Gold */
+            --secondary-color: #2c3e50; /* Dark blue */
+            --accent-color: #d4af37; /* Metallic gold */
+            --background-color: #fcfcfc;
+            --text-color: #333;
+            --light-text: #f8f8f8;
+            --box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            --elegant-font: 'Playfair Display', 'Times New Roman', serif;
+            --body-font: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            font-family: var(--body-font);
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+        
+        .error-container {
+            max-width: 600px;
+            padding: 3rem;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: var(--box-shadow);
+            margin: 0 1rem;
+        }
+        
+        h1 {
+            font-family: var(--elegant-font);
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        
+        h1::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background-color: var(--primary-color);
+            margin: 0.5rem auto 0;
+        }
+        
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            color: #555;
+        }
+        
+        .home-btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary-color);
+        }
+        
+        .home-btn:hover {
+            background-color: transparent;
+            color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            font-family: var(--elegant-font);
+            letter-spacing: 1px;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="logo">Luxury Wall Arts</div>
+        <h1>404</h1>
+        <p>The page you are looking for does not exist or has been moved.</p>
+        <a href="index.html" class="home-btn">Return to Home</a>
+    </div>
+</body>
+</html> 

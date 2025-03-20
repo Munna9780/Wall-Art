@@ -1,0 +1,112 @@
+/* 3D Gallery Effect Styles for Luxury Wall Arts - Optimized Version */
+
+/* Performance optimizations for the gallery */
+.gallery-grid {
+    transform: translateZ(0); /* Force hardware acceleration */
+    -webkit-transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    -webkit-perspective: 1000px;
+}
+
+/* Gallery 3D Effects - optimized transitions */
+.gallery-grid.is-scrolling .gallery-item {
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+.gallery-item {
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    will-change: transform, box-shadow;
+    -webkit-font-smoothing: subpixel-antialiased; /* Smoother text rendering */
+}
+
+.gallery-item-content {
+    transform: translateZ(5px);
+    backface-visibility: hidden;
+    will-change: transform;
+}
+
+/* Optimized animation keyframes */
+@keyframes float {
+    0% {
+        transform: translateY(0px) translateZ(0px);
+    }
+    50% {
+        transform: translateY(-8px) translateZ(15px);
+    }
+    100% {
+        transform: translateY(0px) translateZ(0px);
+    }
+}
+
+/* Apply subtle floating animation to items in view, but only on desktop */
+@media (min-width: 1025px) {
+    .gallery-item.fade-in:not(:hover):not(.active) {
+        animation: float 6s ease-in-out infinite;
+    }
+}
+
+/* Hover and active states - performance optimized */
+.gallery-item:hover {
+    z-index: 10;
+    transform: translateY(-5px) scale(1.03) !important;
+    box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+}
+
+.gallery-item.active {
+    z-index: 20;
+    transform: translateY(-8px) scale(1.05) !important;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
+
+/* Tablet Optimizations */
+@media (max-width: 1024px) {
+    .gallery-item {
+        transform: none !important; /* Remove 3D transforms for better performance */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .gallery-item:hover {
+        transform: translateY(-5px) !important;
+    }
+    
+    .gallery-item.active {
+        transform: translateY(-8px) !important;
+    }
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+    .gallery-item.fade-in:not(:hover):not(.active) {
+        animation: none; /* Disable floating animation on mobile */
+    }
+    
+    .gallery-item:hover, .gallery-item.active {
+        transform: scale(1.03) !important; /* Simpler transform for mobile */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    /* Disable some effects for performance */
+    .gallery-grid {
+        perspective: none;
+    }
+    
+    .gallery-item {
+        transform-style: flat !important;
+    }
+    
+    .gallery-item-content {
+        transform: none !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .gallery-item {
+        transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    }
+    
+    .gallery-item:hover, .gallery-item.active {
+        transform: scale(1.02) !important; /* Even smaller effect on small screens */
+        box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+    }
+} 

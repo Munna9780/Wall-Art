@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Luxury Wall Arts Gallery</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        #admin-login {
+            display: block !important;
+            margin-top: 80px;
+            min-height: 70vh;
+        }
+        #admin {
+            display: none !important;
+        }
+        .login-container {
+            padding: 40px;
+        }
+        .admin-login-section, .admin-section {
+            padding-top: 120px;
+        }
+        main {
+            min-height: 80vh;
+        }
+        /* Error message styles */
+        #login-error {
+            background-color: rgba(231, 76, 60, 0.1);
+            border-left: 4px solid #e74c3c;
+            padding: 10px 15px;
+            margin-top: 20px;
+            display: none;
+            font-weight: 500;
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Luxury Wall Arts</div>
+            <div class="nav-links">
+                <a href="index.html">Back to Site</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Admin login form will be displayed here for non-logged-in users -->
+        <section id="admin-login" class="admin-login-section">
+            <h2>Admin Login</h2>
+            <div class="login-container">
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="submit-btn">Login</button>
+                    </div>
+                    <p id="login-error" class="error-message">Invalid username or password</p>
+                </form>
+            </div>
+        </section>
+
+        <!-- Admin panel will be displayed for logged-in users -->
+        <section id="admin" class="admin-section">
+            <h2>Admin Panel</h2>
+            <div class="admin-container">
+                <div class="admin-sidebar">
+                    <button id="add-wall-art-btn" class="admin-btn active">Add Wall Art</button>
+                    <button id="manage-wall-arts-btn" class="admin-btn">Manage Wall Arts</button>
+                </div>
+                
+                <div class="admin-content">
+                    <div id="add-wall-art-form" class="admin-panel active">
+                        <h3>Add New Wall Art</h3>
+                        <form id="wall-art-form">
+                            <div class="form-group">
+                                <label for="art-title">Title</label>
+                                <input type="text" id="art-title" placeholder="e.g. Elegant Abstract Canvas" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="art-description">Description</label>
+                                <textarea id="art-description" placeholder="Describe the luxury features of this wall art" required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="art-image">Image URL</label>
+                                <input type="url" id="art-image" placeholder="Enter a high-quality image URL" required>
+                                <div class="image-preview-container">
+                                    <img id="image-preview" src="" alt="Preview">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Available Sizes</label>
+                                <div id="sizes-container">
+                                    <div class="size-input-group">
+                                        <input type="text" placeholder="Size (e.g. 8x10 inches)" class="size-dimension" required>
+                                        <input type="text" placeholder="Price (e.g. $99.99)" class="size-price" required>
+                                        <input type="url" placeholder="Amazon Affiliate Link" class="size-link" required>
+                                        <button type="button" class="remove-size-btn">✕</button>
+                                    </div>
+                                </div>
+                                <button type="button" id="add-size-btn">+ Add Another Size</button>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="submit-btn">Add Wall Art</button>
+                                <button type="reset" class="reset-btn">Clear Form</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div id="manage-wall-arts-panel" class="admin-panel">
+                        <h3>Manage Wall Arts</h3>
+                        <div class="wall-arts-list">
+                            <!-- Dynamically populated list of wall arts -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Back to Site</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Luxury Wall Arts Gallery. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Standalone admin functionality - completely independent from script.js
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Standalone admin script loaded");
+            
+            // Admin credentials
+            const ADMIN_USERNAME = "admin";
+            const ADMIN_PASSWORD = "password123";
+            
+            // DOM elements
+            const adminLoginSection = document.getElementById('admin-login');
+            const adminSection = document.getElementById('admin');
+            const loginForm = document.getElementById('login-form');
+            const loginError = document.getElementById('login-error');
+            const username = document.getElementById('username');
+            const password = document.getElementById('password');
+            
+            // Wall arts data
+            let wallArts = [];
+            
+            // Sample default wall arts (same as in script.js)
+            const defaultWallArts = [
+                {
+                    id: 1,
+                    title: "Elegant Abstract Canvas",
+                    description: "Modern abstract wall art with gold foil accents, perfect for luxury living spaces",
+                    image: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                    sizes: [
+                        { size: "5x7 inches", price: "$24.99", amazonLink: "YOUR_AMAZON_AFFILIATE_LINK_1_5x7" },
+                        { size: "8x10 inches", price: "$39.99", amazonLink: "YOUR_AMAZON_AFFILIATE_LINK_1_8x10" },
+                        { size: "9x12 inches", price: "$49.99", amazonLink: "YOUR_AMAZON_AFFILIATE_LINK_1_9x12" }
+                    ]
+                },
+                {
+                    id: 2,
+                    title: "Minimalist Gold Leaf Print",
+                    description: "Clean, sophisticated design with real gold leaf embellishments",
+                    image: "https://images.unsplash.com/photo-1577083552431-6e5c019a0f1e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                    sizes: [
+                        { size: "4x6 inches", price: "$19.99", amazonLink: "YOUR_AMAZON_AFFILIATE_LINK_2_4x6" },
+                        { size: "5x5 inches", price: "$24.99", amazonLink: "YOUR_AMAZON_AFFILIATE_LINK_2_5x5" }
+                    ]
+                }
+            ];
+            
+            // Try loading from localStorage
+            try {
+                const storedArts = localStorage.getItem('wallArts');
+                if (storedArts) {
+                    wallArts = JSON.parse(storedArts);
+                    console.log(`Loaded ${wallArts.length} wall arts from localStorage`);
+                } else {
+                    // If no stored arts, use the defaults
+                    console.log("No wall arts found in localStorage, using defaults");
+                    wallArts = defaultWallArts;
+                    localStorage.setItem('wallArts', JSON.stringify(wallArts));
+                }
+            } catch (e) {
+                console.error("Error loading wall arts from localStorage:", e);
+                // Fallback to default wall arts if there's an error
+                wallArts = defaultWallArts;
+            }
+            
+            // Check login status
+            function checkLoginStatus() {
+                const isLoggedIn = sessionStorage.getItem('isAdminLoggedIn') === 'true';
+                console.log("Login status check:", isLoggedIn);
+                
+                if (isLoggedIn) {
+                    // User is logged in, show admin panel
+                    adminLoginSection.style.cssText = "display: none !important;";
+                    adminSection.style.cssText = "display: block !important;";
+                    
+                    // Add logout button if not exists
+                    if (!document.querySelector('.logout-btn')) {
+                        const logoutBtn = document.createElement('button');
+                        logoutBtn.className = 'logout-btn';
+                        logoutBtn.textContent = 'Logout';
+                        logoutBtn.addEventListener('click', handleLogout);
+                        
+                        const adminContainer = document.querySelector('.admin-container');
+                        if (adminContainer) {
+                            adminContainer.insertAdjacentElement('beforebegin', logoutBtn);
+                        }
+                    }
+                    
+                    // Setup admin panel
+                    setupAdminPanel();
+                } else {
+                    // User is not logged in, show login form
+                    adminLoginSection.style.cssText = "display: block !important;";
+                    adminSection.style.cssText = "display: none !important;";
+                }
+            }
+            
+            // Handle login
+            function handleLogin(e) {
+                e.preventDefault();
+                console.log("Login attempt");
+                
+                if (username.value === ADMIN_USERNAME && password.value === ADMIN_PASSWORD) {
+                    console.log("Login successful");
+                    sessionStorage.setItem('isAdminLoggedIn', 'true');
+                    checkLoginStatus();
+                } else {
+                    console.log("Login failed");
+                    loginError.style.display = 'block';
+                }
+            }
+            
+            // Handle logout
+            function handleLogout() {
+                console.log("Logout");
+                sessionStorage.removeItem('isAdminLoggedIn');
+                checkLoginStatus();
+                
+                // Remove logout button
+                const logoutBtn = document.querySelector('.logout-btn');
+                if (logoutBtn) {
+                    logoutBtn.remove();
+                }
+            }
+            
+            // Setup admin panel functionality
+            function setupAdminPanel() {
+                console.log("Setting up admin panel");
+                
+                const addWallArtBtn = document.getElementById('add-wall-art-btn');
+                const manageWallArtsBtn = document.getElementById('manage-wall-arts-btn');
+                const addWallArtForm = document.getElementById('add-wall-art-form');
+                const manageWallArtsPanel = document.getElementById('manage-wall-arts-panel');
+                const wallArtForm = document.getElementById('wall-art-form');
+                const sizesContainer = document.getElementById('sizes-container');
+                const addSizeBtn = document.getElementById('add-size-btn');
+                const imageInput = document.getElementById('art-image');
+                const imagePreview = document.getElementById('image-preview');
+                
+                // Tab switching
+                addWallArtBtn.addEventListener('click', function() {
+                    addWallArtBtn.classList.add('active');
+                    manageWallArtsBtn.classList.remove('active');
+                    addWallArtForm.classList.add('active');
+                    manageWallArtsPanel.classList.remove('active');
+                });
+                
+                manageWallArtsBtn.addEventListener('click', function() {
+                    manageWallArtsBtn.classList.add('active');
+                    addWallArtBtn.classList.remove('active');
+                    manageWallArtsPanel.classList.add('active');
+                    addWallArtForm.classList.remove('active');
+                    renderWallArtsList();
+                });
+                
+                // Add new size field
+                addSizeBtn.addEventListener('click', function() {
+                    const sizeField = document.createElement('div');
+                    sizeField.className = 'size-input-group';
+                    sizeField.innerHTML = `
+                        <input type="text" placeholder="Size (e.g. 8x10 inches)" class="size-dimension" required>
+                        <input type="text" placeholder="Price (e.g. $99.99)" class="size-price" required>
+                        <input type="url" placeholder="Amazon Affiliate Link" class="size-link" required>
+                        <button type="button" class="remove-size-btn">✕</button>
+                    `;
+                    sizesContainer.appendChild(sizeField);
+                    
+                    // Add remove button listener
+                    const removeBtn = sizeField.querySelector('.remove-size-btn');
+                    removeBtn.addEventListener('click', function() {
+                        sizeField.remove();
+                    });
+                });
+                
+                // Setup existing remove buttons
+                document.querySelectorAll('.remove-size-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        if (sizesContainer.children.length > 1) {
+                            btn.closest('.size-input-group').remove();
+                        }
+                    });
+                });
+                
+                // Image preview
+                imageInput.addEventListener('input', function() {
+                    const imageUrl = imageInput.value.trim();
+                    if (imageUrl) {
+                        imagePreview.src = imageUrl;
+                        imagePreview.style.display = 'block';
+                        imagePreview.onerror = function() {
+                            imagePreview.style.display = 'none';
+                        };
+                    } else {
+                        imagePreview.style.display = 'none';
+                    }
+                });
+                
+                // Form submission
+                wallArtForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    console.log("Form submitted");
+                    
+                    // Generate ID
+                    const newId = wallArts.length > 0 ? Math.max(...wallArts.map(art => art.id)) + 1 : 1;
+                    
+                    // Collect sizes
+                    const sizes = [];
+                    document.querySelectorAll('.size-input-group').forEach(group => {
+                        sizes.push({
+                            size: group.querySelector('.size-dimension').value,
+                            price: group.querySelector('.size-price').value,
+                            amazonLink: group.querySelector('.size-link').value
+                        });
+                    });
+                    
+                    // Create new wall art
+                    const newWallArt = {
+                        id: newId,
+                        title: document.getElementById('art-title').value,
+                        description: document.getElementById('art-description').value,
+                        image: document.getElementById('art-image').value,
+                        sizes: sizes
+                    };
+                    
+                    // Add to array and save
+                    wallArts.push(newWallArt);
+                    saveWallArts();
+                    
+                    // Reset form
+                    wallArtForm.reset();
+                    imagePreview.style.display = 'none';
+                    
+                    // Keep only one size field
+                    while (sizesContainer.children.length > 1) {
+                        sizesContainer.removeChild(sizesContainer.lastChild);
+                    }
+                    
+                    alert('Wall art added successfully! Product will appear in the gallery.');
+                });
+                
+                // Initial render of wall arts list
+                renderWallArtsList();
+            }
+            
+            // Render wall arts list
+            function renderWallArtsList() {
+                const wallArtsList = document.querySelector('.wall-arts-list');
+                if (!wallArtsList) return;
+                
+                wallArtsList.innerHTML = '';
+                
+                if (wallArts.length === 0) {
+                    wallArtsList.innerHTML = '<p>No wall arts to display</p>';
+                    return;
+                }
+                
+                wallArts.forEach(art => {
+                    const artItem = document.createElement('div');
+                    artItem.className = 'wall-art-item';
+                    artItem.innerHTML = `
+                        <img src="${art.image}" alt="${art.title}" class="wall-art-thumb">
+                        <div class="wall-art-info">
+                            <h4>${art.title}</h4>
+                            <p>${art.description.substring(0, 60)}${art.description.length > 60 ? '...' : ''}</p>
+                            <p><strong>Sizes:</strong> ${art.sizes.length}</p>
+                            <div class="wall-art-actions">
+                                <button class="delete-btn" data-id="${art.id}">Delete</button>
+                            </div>
+                        </div>
+                    `;
+                    wallArtsList.appendChild(artItem);
+                });
+                
+                // Add delete listeners
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.dataset.id);
+                        
+                        if (confirm('Are you sure you want to delete this wall art?')) {
+                            // Remove from array
+                            const index = wallArts.findIndex(art => art.id === id);
+                            if (index !== -1) {
+                                wallArts.splice(index, 1);
+                                saveWallArts();
+                                renderWallArtsList();
+                            }
+                        }
+                    });
+                });
+            }
+            
+            // Save wall arts to localStorage
+            function saveWallArts() {
+                try {
+                    localStorage.setItem('wallArts', JSON.stringify(wallArts));
+                    console.log(`Saved ${wallArts.length} wall arts to localStorage`);
+                } catch (e) {
+                    console.error("Error saving wall arts to localStorage:", e);
+                    alert("Error saving data. Your browser might have restrictions on local storage.");
+                }
+            }
+            
+            // Initialize
+            if (loginForm) {
+                loginForm.addEventListener('submit', handleLogin);
+            }
+            
+            // Initial check
+            checkLoginStatus();
+        });
+    </script>
+</body>
+</html> 

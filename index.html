@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Luxury Wall Arts - Premium collection of high-quality wall art pieces">
+    <meta name="theme-color" content="#f5f5f5">
+    <title>Luxury Wall Arts</title>
+    
+    <!-- Performance optimizations -->
+    <link rel="preload" href="styles.css" as="style">
+    <link rel="preload" href="script.js" as="script">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Critical CSS for faster initial render -->
+    <style>
+        /* Critical styles for immediate rendering */
+        body { 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Raleway', sans-serif; 
+            background-color: #fcfcfc;
+        }
+        .container { 
+            width: 100%; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            padding-top: 70px; 
+        }
+        header { 
+            background-color: rgba(255, 255, 255, 0.97); 
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            position: fixed; 
+            width: 100%; 
+            top: 0; 
+            z-index: 1000;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .loading-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <h1>Luxury Wall Arts</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">Home</a></li>
+                    <li><a href="#gallery">Collection</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="admin.html" class="admin-link"><i class="fas fa-lock"></i></a></li>
+                </ul>
+            </nav>
+            <button class="mobile-nav-toggle" aria-expanded="false" aria-label="Toggle navigation menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </header>
+        
+        <div class="hero digital-workspace-banner">
+            <div class="hero-banner">
+                <!-- This will hold the banner image once it's ready -->
+                <div class="hero-overlay"></div>
+            </div>
+            <div class="hero-content">
+                <h1>Luxury Wall Arts</h1>
+                <p>Transform your space with our exclusive collection of premium wall art pieces</p>
+                <a href="#gallery" class="cta-button">View Collection</a>
+            </div>
+        </div>
+        
+        <section id="gallery" class="gallery-section">
+            <h2>Our Collection</h2>
+            <div id="gallery-grid" class="gallery medium-size-banner">
+                <!-- Wall arts will be dynamically inserted here -->
+                <div class="loading-indicator">
+                    <div class="spinner"></div>
+                    <p>Loading art collection...</p>
+                </div>
+            </div>
+        </section>
+        
+        <div class="modal" id="sizeModal" aria-hidden="true" role="dialog" aria-labelledby="modalTitle">
+            <div class="modal-content" role="document">
+                <button class="close-modal" aria-label="Close modal">&times;</button>
+                <div class="modal-header">
+                    <h3 id="modalTitle">Size Options</h3>
+                </div>
+                <div id="sizeOptions" class="size-options">
+                    <!-- Size options will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <div class="footer-content">
+                <div class="footer-section about">
+                    <h3>About Us</h3>
+                    <p>We specialize in luxury wall arts that transform spaces and elevate interiors. Our curated collection features handcrafted pieces from renowned artists.</p>
+                </div>
+                <div class="footer-section contact">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-phone"></i> +1 555-123-4567</p>
+                    <p><i class="fas fa-envelope"></i> info@luxurywallarts.com</p>
+                </div>
+                <div class="footer-section social">
+                    <h3>Follow Us</h3>
+                    <div class="social-icons">
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Luxury Wall Arts. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Defer non-critical JavaScript -->
+    <script src="script.js" defer></script>
+    <script>
+        // Initialization to ensure mobile functionality works correctly
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing mobile functionality');
+            
+            // Mobile navigation toggle - improved version
+            const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
+            const navUl = document.querySelector('nav ul');
+            
+            if (mobileNavToggle && navUl) {
+                // Clean up any previous listeners
+                const newMobileNavToggle = mobileNavToggle.cloneNode(true);
+                mobileNavToggle.parentNode.replaceChild(newMobileNavToggle, mobileNavToggle);
+                
+                // Add new event listener
+                newMobileNavToggle.addEventListener('click', function() {
+                    navUl.classList.toggle('active');
+                    this.classList.toggle('active');
+                    
+                    // Set aria-expanded for accessibility
+                    const expanded = navUl.classList.contains('active');
+                    this.setAttribute('aria-expanded', expanded);
+                    
+                    console.log(`Mobile menu ${expanded ? 'opened' : 'closed'}`);
+                });
+            }
+            
+            // Check if we're on a mobile device
+            const isMobile = window.innerWidth <= 768 || 
+                           /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            if (isMobile) {
+                document.body.classList.add('mobile-view');
+                document.documentElement.classList.add('mobile-device');
+                console.log("Mobile device detected, applying mobile optimizations");
+            }
+            
+            // Create intersection observer for lazy loading
+            if ('IntersectionObserver' in window) {
+                const galleryObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            try {
+                                // Initialize gallery when it comes into view
+                                if (typeof initializeGallery === 'function' && 
+                                    document.querySelectorAll('.gallery-item').length === 0) {
+                                    const success = initializeGallery();
+                                    console.log(`Gallery initialized via intersection observer: ${success ? 'success' : 'failed'}`);
+                                }
+                                observer.unobserve(entry.target);
+                            } catch (err) {
+                                console.error('Error initializing gallery:', err);
+                            }
+                        }
+                    });
+                }, {
+                    rootMargin: '200px' // Start loading before it's in view
+                });
+                
+                // Observe the gallery section
+                const gallerySection = document.querySelector('.gallery-section');
+                if (gallerySection) {
+                    galleryObserver.observe(gallerySection);
+                }
+            } else {
+                // Fallback for browsers that don't support IntersectionObserver
+                if (typeof initializeGallery === 'function') {
+                    setTimeout(() => {
+                        try {
+                            initializeGallery();
+                        } catch (err) {
+                            console.error('Error initializing gallery (fallback):', err);
+                        }
+                    }, 500);
+                }
+            }
+            
+            // Modal accessibility handling
+            const modal = document.getElementById('sizeModal');
+            const closeBtn = document.querySelector('.close-modal');
+            
+            if (modal && closeBtn) {
+                // Clean up previous listeners
+                const newCloseBtn = closeBtn.cloneNode(true);
+                closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
+                
+                // Add new event listener
+                newCloseBtn.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                    modal.setAttribute('aria-hidden', 'true');
+                });
+                
+                // Close on outside click
+                window.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.style.display = 'none';
+                        modal.setAttribute('aria-hidden', 'true');
+                    }
+                });
+                
+                // Close on escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && modal.style.display === 'block') {
+                        modal.style.display = 'none';
+                        modal.setAttribute('aria-hidden', 'true');
+                    }
+                });
+            }
+            
+            // Ensure content is loaded
+            const ensureContentLoaded = function(retry = 0) {
+                if (retry > 5) return; // Limit retries
+                
+                const gallery = document.getElementById('gallery-grid');
+                if (gallery && gallery.querySelectorAll('.gallery-item').length === 0) {
+                    console.log(`No products found, attempting to load (retry: ${retry})`);
+                    
+                    // Hide loading indicator after a reasonable time
+                    const loadingIndicator = document.querySelector('.loading-indicator');
+                    if (loadingIndicator) {
+                        setTimeout(() => {
+                            loadingIndicator.style.display = 'none';
+                        }, 800);
+                    }
+                    
+                    // Retry loading products and initializing gallery
+                    if (typeof loadProducts === 'function' && typeof initializeGallery === 'function') {
+                        try {
+                            console.log("Loading products and reinitializing gallery");
+                            loadProducts();
+                            initializeGallery();
+                            
+                            // Check if products were loaded successfully
+                            setTimeout(() => {
+                                if (gallery.querySelectorAll('.gallery-item').length === 0) {
+                                    // Still no products, retry
+                                    console.log("Still no products, retrying...");
+                                    ensureContentLoaded(retry + 1);
+                                } else {
+                                    console.log("Products loaded successfully");
+                                }
+                            }, 500 * (retry + 1)); // Increase delay with each retry
+                        } catch (err) {
+                            console.error('Product loading error:', err);
+                        }
+                    }
+                }
+            };
+            
+            // Initial check
+            setTimeout(ensureContentLoaded, 1000);
+            
+            // Also check when coming back to the page
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') {
+                    ensureContentLoaded();
+                }
+            });
+        });
+        
+        // Add detect touch device to document
+        document.documentElement.className += (('ontouchstart' in document.documentElement) ? ' touch-device' : ' no-touch');
+    </script>
+</body>
+</html> 
+</html> 

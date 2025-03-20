@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="0;url=admin.html">
+    <title>Redirecting to Admin...</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            background-color: #fcfcfc;
+            color: #2c3e50;
+        }
+        .redirect {
+            max-width: 500px;
+            padding: 2rem;
+            background: white;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            border-radius: 15px;
+        }
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: #b8860b;
+        }
+        a {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.75rem 1.5rem;
+            background-color: #b8860b;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="redirect">
+        <h1>Redirecting to Admin Panel</h1>
+        <p>Please wait, you are being redirected to the admin panel...</p>
+        <p>If you are not redirected automatically, please click the button below:</p>
+        <a href="admin.html">Go to Admin Panel</a>
+    </div>
+    <script>
+        // Force redirect
+        window.location.href = "admin.html";
+    </script>
+</body>
+</html> 
