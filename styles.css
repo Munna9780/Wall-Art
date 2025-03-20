@@ -291,7 +291,7 @@ nav ul li a:hover::after, nav ul li a.active::after {
     text-align: center;
     padding: 0;
     width: 100%;
-    aspect-ratio: 16/9; /* This creates a 1:1 ratio */
+    aspect-ratio: 16/9; /* Maintain a 16:9 aspect ratio */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -299,6 +299,8 @@ nav ul li a:hover::after, nav ul li a.active::after {
     overflow: hidden;
     box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     z-index: 1;
+    max-height: 500px; /* Add a max-height to control the size */
+    height: auto; /* Let the height adjust automatically */
 }
 
 /* Default banner background for fallback */
@@ -313,9 +315,11 @@ nav ul li a:hover::after, nav ul li a.active::after {
 .digital-workspace-banner {
     position: relative;
     width: 100%;
-    aspect-ratio: 1/1; /* This creates a 1:1 ratio */
+    aspect-ratio: 1/1; /* Maintain a 1:1 aspect ratio */
     background-color: #0c1224; /* Dark background as fallback */
     overflow: hidden;
+    max-height: 500px; /* Add a max-height to control the size */
+    height: auto; /* Let the height adjust automatically */
 }
 
 .hero-banner {
