@@ -425,11 +425,11 @@ nav ul li a:hover::after, nav ul li a.active::after {
 /* Responsive styles for the hero section */
 @media (max-width: 768px) {
     .hero {
-        aspect-ratio: 1/1;
+        aspect-ratio: 16/9;
     }
     
     .digital-workspace-banner {
-        aspect-ratio: 1/1;
+        aspect-ratio: 16/9;
     }
     
     .hero h1 {
