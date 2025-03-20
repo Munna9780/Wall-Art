@@ -291,7 +291,7 @@ nav ul li a:hover::after, nav ul li a.active::after {
     text-align: center;
     padding: 0;
     width: 100%;
-    aspect-ratio: 1/1; /* This creates a 1:1 ratio */
+    aspect-ratio: 16/9; /* This creates a 1:1 ratio */
     display: flex;
     align-items: center;
     justify-content: center;
