@@ -385,6 +385,7 @@ nav ul li a:hover::after, nav ul li a.active::after {
     letter-spacing: 0.5px;
 }
 
+
 .hero p {
     font-size: 7px; /* Adjusted to be between 5-10px */
     margin-bottom: 15px;
@@ -392,6 +393,7 @@ nav ul li a:hover::after, nav ul li a.active::after {
     color: rgba(255,255,255,0.9);
     letter-spacing: 0.3px;
 }
+
 
 .cta-button {
     display: inline-block;
